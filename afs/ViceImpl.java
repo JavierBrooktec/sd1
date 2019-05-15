@@ -3,13 +3,14 @@
 package afs;
 import java.rmi.*;
 import java.rmi.server.*;
+import java.io.FileNotFoundException;
 
 public class ViceImpl extends UnicastRemoteObject implements Vice {
     public ViceImpl() throws RemoteException {
     }
-    public ViceReader download(String fileName /* añada los parámetros que requiera */)
-          throws RemoteException {
-        return null;
+    public ViceReader download(String fileName,String modo/* añada los parámetros que requiera */)
+          throws RemoteException, FileNotFoundException {
+        return new ViceReaderImpl(fileName,modo);
     }
     public ViceWriter upload(String fileName /* añada los parámetros que requiera */)
           throws RemoteException {
