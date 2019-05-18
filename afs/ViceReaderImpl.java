@@ -1,6 +1,7 @@
 // Implementación de la interfaz de servidor que define los métodos remotos
 // para completar la descarga de un fichero
 package afs;
+
 import java.rmi.*;
 import java.rmi.server.*;
 import java.io.FileNotFoundException;
@@ -11,27 +12,27 @@ public class ViceReaderImpl extends UnicastRemoteObject implements ViceReader {
     private static final String AFSDir = "AFSDir/";
     private RandomAccessFile f;
 
-    public ViceReaderImpl(String fileName,String modo /* añada los parámetros que requiera */)
-		    throws RemoteException, FileNotFoundException {
-    	f = new RandomAccessFile(fileName, modo );	
+    public ViceReaderImpl(String fileName, String modo) throws RemoteException, FileNotFoundException {
+        fileName = AFSDir + fileName;
+        f = new RandomAccessFile(fileName, modo);
     }
-    public byte[] read(int tam) throws RemoteException {
-        //A medio hacer
-    	byte [] b = new byte[tam];
-    	int  c=0;
-    	try {
-			while(f.read()!=-1) {
-				b[c]=f.readByte();	
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        return b;
-    }
-    }
-    public void close() throws RemoteException {
-        return;
-    }
-}       
 
+    public byte[] read(int tamLecture) throws RemoteException, IOException {
+
+        byte[] result = new byte[tamLecture];
+        int tamFile = (int) f.length();
+        int puntero = 0;
+
+        while (puntero < tamFile || puntero < tamLecture) {
+
+            f.seek(puntero);
+            result[puntero] = f.readByte();
+            puntero++;
+        }
+        return result;
+    }
+
+    public void close() throws RemoteException, IOException {
+        f.close();
+    }
+}
